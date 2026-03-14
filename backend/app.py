@@ -13,74 +13,83 @@ app = Flask(__name__)
 CORS(app)
 
 # ──────────────────────────────────────────────────────────────
+# Exercise Image CDN
+# Images sourced from yuhonas/free-exercise-db (public domain)
+# Each exercise folder contains 0.jpg (start) and 1.jpg (end)
+# ──────────────────────────────────────────────────────────────
+
+IMAGE_BASE_URL = "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises"
+
+# ──────────────────────────────────────────────────────────────
 # Exercise Database — organized by muscle group
-# Each exercise has: name, equipment, sets, reps, rest (seconds)
+# Each exercise has: name, equipment, sets, reps, rest, image_id
+# image_id maps to the free-exercise-db folder name
 # ──────────────────────────────────────────────────────────────
 
 EXERCISES = {
     "Chest": [
-        {"name": "Barbell Bench Press", "equipment": "Barbell", "sets": 4, "reps": "8-10", "rest": 90},
-        {"name": "Incline Dumbbell Press", "equipment": "Dumbbells", "sets": 3, "reps": "10-12", "rest": 75},
-        {"name": "Cable Flyes", "equipment": "Cable Machine", "sets": 3, "reps": "12-15", "rest": 60},
-        {"name": "Push-Ups", "equipment": "Bodyweight", "sets": 3, "reps": "15-20", "rest": 45},
-        {"name": "Dumbbell Pullover", "equipment": "Dumbbell", "sets": 3, "reps": "10-12", "rest": 60},
-        {"name": "Chest Dips", "equipment": "Dip Station", "sets": 3, "reps": "10-15", "rest": 75},
-        {"name": "Pec Deck Machine", "equipment": "Machine", "sets": 3, "reps": "12-15", "rest": 60},
+        {"name": "Barbell Bench Press", "equipment": "Barbell", "sets": 4, "reps": "8-10", "rest": 90, "image_id": "Barbell_Bench_Press_-_Medium_Grip"},
+        {"name": "Incline Dumbbell Press", "equipment": "Dumbbells", "sets": 3, "reps": "10-12", "rest": 75, "image_id": "Incline_Dumbbell_Press"},
+        {"name": "Cable Flyes", "equipment": "Cable Machine", "sets": 3, "reps": "12-15", "rest": 60, "image_id": "Flat_Bench_Cable_Flyes"},
+        {"name": "Push-Ups", "equipment": "Bodyweight", "sets": 3, "reps": "15-20", "rest": 45, "image_id": "Push-Ups"},
+        {"name": "Dumbbell Pullover", "equipment": "Dumbbell", "sets": 3, "reps": "10-12", "rest": 60, "image_id": "Bent-Arm_Dumbbell_Pullover"},
+        {"name": "Chest Dips", "equipment": "Dip Station", "sets": 3, "reps": "10-15", "rest": 75, "image_id": "Dips_-_Chest_Version"},
+        {"name": "Pec Deck Machine", "equipment": "Machine", "sets": 3, "reps": "12-15", "rest": 60, "image_id": "Butterfly"},
     ],
     "Back": [
-        {"name": "Deadlift", "equipment": "Barbell", "sets": 4, "reps": "5-8", "rest": 120},
-        {"name": "Pull-Ups", "equipment": "Pull-Up Bar", "sets": 4, "reps": "8-12", "rest": 90},
-        {"name": "Barbell Rows", "equipment": "Barbell", "sets": 4, "reps": "8-10", "rest": 90},
-        {"name": "Lat Pulldown", "equipment": "Cable Machine", "sets": 3, "reps": "10-12", "rest": 75},
-        {"name": "Seated Cable Row", "equipment": "Cable Machine", "sets": 3, "reps": "10-12", "rest": 75},
-        {"name": "T-Bar Row", "equipment": "T-Bar", "sets": 3, "reps": "8-10", "rest": 90},
-        {"name": "Face Pulls", "equipment": "Cable Machine", "sets": 3, "reps": "15-20", "rest": 45},
+        {"name": "Deadlift", "equipment": "Barbell", "sets": 4, "reps": "5-8", "rest": 120, "image_id": "Barbell_Deadlift"},
+        {"name": "Pull-Ups", "equipment": "Pull-Up Bar", "sets": 4, "reps": "8-12", "rest": 90, "image_id": "Pullups"},
+        {"name": "Barbell Rows", "equipment": "Barbell", "sets": 4, "reps": "8-10", "rest": 90, "image_id": "Bent_Over_Barbell_Row"},
+        {"name": "Lat Pulldown", "equipment": "Cable Machine", "sets": 3, "reps": "10-12", "rest": 75, "image_id": "Wide-Grip_Lat_Pulldown"},
+        {"name": "Seated Cable Row", "equipment": "Cable Machine", "sets": 3, "reps": "10-12", "rest": 75, "image_id": "Seated_Cable_Rows"},
+        {"name": "T-Bar Row", "equipment": "T-Bar", "sets": 3, "reps": "8-10", "rest": 90, "image_id": "Bent_Over_Two-Arm_Long_Bar_Row"},
+        {"name": "Face Pulls", "equipment": "Cable Machine", "sets": 3, "reps": "15-20", "rest": 45, "image_id": "Face_Pull"},
     ],
     "Legs": [
-        {"name": "Barbell Squat", "equipment": "Barbell", "sets": 4, "reps": "6-8", "rest": 120},
-        {"name": "Romanian Deadlift", "equipment": "Barbell", "sets": 4, "reps": "8-10", "rest": 90},
-        {"name": "Leg Press", "equipment": "Machine", "sets": 4, "reps": "10-12", "rest": 90},
-        {"name": "Walking Lunges", "equipment": "Dumbbells", "sets": 3, "reps": "12 each", "rest": 75},
-        {"name": "Leg Curl", "equipment": "Machine", "sets": 3, "reps": "10-12", "rest": 60},
-        {"name": "Leg Extension", "equipment": "Machine", "sets": 3, "reps": "12-15", "rest": 60},
-        {"name": "Calf Raises", "equipment": "Smith Machine", "sets": 4, "reps": "15-20", "rest": 45},
-        {"name": "Bulgarian Split Squat", "equipment": "Dumbbells", "sets": 3, "reps": "10 each", "rest": 75},
+        {"name": "Barbell Squat", "equipment": "Barbell", "sets": 4, "reps": "6-8", "rest": 120, "image_id": "Barbell_Squat"},
+        {"name": "Romanian Deadlift", "equipment": "Barbell", "sets": 4, "reps": "8-10", "rest": 90, "image_id": "Romanian_Deadlift_With_Dumbbells"},
+        {"name": "Leg Press", "equipment": "Machine", "sets": 4, "reps": "10-12", "rest": 90, "image_id": "Leg_Press"},
+        {"name": "Walking Lunges", "equipment": "Dumbbells", "sets": 3, "reps": "12 each", "rest": 75, "image_id": "Barbell_Walking_Lunge"},
+        {"name": "Leg Curl", "equipment": "Machine", "sets": 3, "reps": "10-12", "rest": 60, "image_id": "Seated_Leg_Curl"},
+        {"name": "Leg Extension", "equipment": "Machine", "sets": 3, "reps": "12-15", "rest": 60, "image_id": "Leg_Extensions"},
+        {"name": "Calf Raises", "equipment": "Smith Machine", "sets": 4, "reps": "15-20", "rest": 45, "image_id": "Smith_Machine_Calf_Raise"},
+        {"name": "Bulgarian Split Squat", "equipment": "Dumbbells", "sets": 3, "reps": "10 each", "rest": 75, "image_id": "Single_Leg_Push-Off"},
     ],
     "Shoulders": [
-        {"name": "Overhead Press", "equipment": "Barbell", "sets": 4, "reps": "6-8", "rest": 90},
-        {"name": "Lateral Raises", "equipment": "Dumbbells", "sets": 4, "reps": "12-15", "rest": 45},
-        {"name": "Front Raises", "equipment": "Dumbbells", "sets": 3, "reps": "12-15", "rest": 45},
-        {"name": "Reverse Flyes", "equipment": "Dumbbells", "sets": 3, "reps": "12-15", "rest": 45},
-        {"name": "Arnold Press", "equipment": "Dumbbells", "sets": 3, "reps": "10-12", "rest": 75},
-        {"name": "Upright Rows", "equipment": "Barbell", "sets": 3, "reps": "10-12", "rest": 60},
+        {"name": "Overhead Press", "equipment": "Barbell", "sets": 4, "reps": "6-8", "rest": 90, "image_id": "Barbell_Shoulder_Press"},
+        {"name": "Lateral Raises", "equipment": "Dumbbells", "sets": 4, "reps": "12-15", "rest": 45, "image_id": "Side_Lateral_Raise"},
+        {"name": "Front Raises", "equipment": "Dumbbells", "sets": 3, "reps": "12-15", "rest": 45, "image_id": "Front_Dumbbell_Raise"},
+        {"name": "Reverse Flyes", "equipment": "Dumbbells", "sets": 3, "reps": "12-15", "rest": 45, "image_id": "Bent_Over_Dumbbell_Rear_Delt_Raise_With_Head_On_Bench"},
+        {"name": "Arnold Press", "equipment": "Dumbbells", "sets": 3, "reps": "10-12", "rest": 75, "image_id": "Arnold_Dumbbell_Press"},
+        {"name": "Upright Rows", "equipment": "Barbell", "sets": 3, "reps": "10-12", "rest": 60, "image_id": "Upright_Barbell_Row"},
     ],
     "Arms": [
-        {"name": "Barbell Curl", "equipment": "Barbell", "sets": 3, "reps": "10-12", "rest": 60},
-        {"name": "Tricep Dips", "equipment": "Dip Station", "sets": 3, "reps": "10-15", "rest": 75},
-        {"name": "Hammer Curls", "equipment": "Dumbbells", "sets": 3, "reps": "10-12", "rest": 60},
-        {"name": "Skull Crushers", "equipment": "EZ Bar", "sets": 3, "reps": "10-12", "rest": 60},
-        {"name": "Cable Curls", "equipment": "Cable Machine", "sets": 3, "reps": "12-15", "rest": 45},
-        {"name": "Tricep Pushdown", "equipment": "Cable Machine", "sets": 3, "reps": "12-15", "rest": 45},
-        {"name": "Concentration Curls", "equipment": "Dumbbell", "sets": 3, "reps": "10-12", "rest": 45},
-        {"name": "Overhead Tricep Extension", "equipment": "Dumbbell", "sets": 3, "reps": "10-12", "rest": 60},
+        {"name": "Barbell Curl", "equipment": "Barbell", "sets": 3, "reps": "10-12", "rest": 60, "image_id": "Barbell_Curl"},
+        {"name": "Tricep Dips", "equipment": "Dip Station", "sets": 3, "reps": "10-15", "rest": 75, "image_id": "Bench_Dips"},
+        {"name": "Hammer Curls", "equipment": "Dumbbells", "sets": 3, "reps": "10-12", "rest": 60, "image_id": "Alternate_Hammer_Curl"},
+        {"name": "Skull Crushers", "equipment": "EZ Bar", "sets": 3, "reps": "10-12", "rest": 60, "image_id": "EZ-Bar_Skullcrusher"},
+        {"name": "Cable Curls", "equipment": "Cable Machine", "sets": 3, "reps": "12-15", "rest": 45, "image_id": "Cable_Hammer_Curls_-_Rope_Attachment"},
+        {"name": "Tricep Pushdown", "equipment": "Cable Machine", "sets": 3, "reps": "12-15", "rest": 45, "image_id": "Triceps_Pushdown"},
+        {"name": "Concentration Curls", "equipment": "Dumbbell", "sets": 3, "reps": "10-12", "rest": 45, "image_id": "Concentration_Curls"},
+        {"name": "Overhead Tricep Extension", "equipment": "Dumbbell", "sets": 3, "reps": "10-12", "rest": 60, "image_id": "Standing_Dumbbell_Triceps_Extension"},
     ],
     "Core": [
-        {"name": "Plank", "equipment": "Bodyweight", "sets": 3, "reps": "45-60 sec", "rest": 30},
-        {"name": "Hanging Leg Raises", "equipment": "Pull-Up Bar", "sets": 3, "reps": "12-15", "rest": 45},
-        {"name": "Cable Woodchoppers", "equipment": "Cable Machine", "sets": 3, "reps": "12 each", "rest": 45},
-        {"name": "Ab Wheel Rollout", "equipment": "Ab Wheel", "sets": 3, "reps": "10-12", "rest": 60},
-        {"name": "Russian Twists", "equipment": "Bodyweight", "sets": 3, "reps": "20 total", "rest": 30},
-        {"name": "Bicycle Crunches", "equipment": "Bodyweight", "sets": 3, "reps": "20 total", "rest": 30},
-        {"name": "Dead Bug", "equipment": "Bodyweight", "sets": 3, "reps": "10 each", "rest": 30},
+        {"name": "Plank", "equipment": "Bodyweight", "sets": 3, "reps": "45-60 sec", "rest": 30, "image_id": "Plank"},
+        {"name": "Hanging Leg Raises", "equipment": "Pull-Up Bar", "sets": 3, "reps": "12-15", "rest": 45, "image_id": "Hanging_Leg_Raise"},
+        {"name": "Cable Woodchoppers", "equipment": "Cable Machine", "sets": 3, "reps": "12 each", "rest": 45, "image_id": "Cross-Body_Crunch"},
+        {"name": "Ab Wheel Rollout", "equipment": "Ab Wheel", "sets": 3, "reps": "10-12", "rest": 60, "image_id": "Ab_Roller"},
+        {"name": "Russian Twists", "equipment": "Bodyweight", "sets": 3, "reps": "20 total", "rest": 30, "image_id": "Russian_Twist"},
+        {"name": "Bicycle Crunches", "equipment": "Bodyweight", "sets": 3, "reps": "20 total", "rest": 30, "image_id": "Air_Bike"},
+        {"name": "Dead Bug", "equipment": "Bodyweight", "sets": 3, "reps": "10 each", "rest": 30, "image_id": "Flat_Bench_Lying_Leg_Raise"},
     ],
     "Full Body": [
-        {"name": "Burpees", "equipment": "Bodyweight", "sets": 3, "reps": "10-15", "rest": 60},
-        {"name": "Thrusters", "equipment": "Barbell", "sets": 4, "reps": "8-10", "rest": 90},
-        {"name": "Kettlebell Swings", "equipment": "Kettlebell", "sets": 4, "reps": "15-20", "rest": 60},
-        {"name": "Clean and Press", "equipment": "Barbell", "sets": 4, "reps": "6-8", "rest": 120},
-        {"name": "Man Makers", "equipment": "Dumbbells", "sets": 3, "reps": "8-10", "rest": 90},
-        {"name": "Mountain Climbers", "equipment": "Bodyweight", "sets": 3, "reps": "30 sec", "rest": 30},
-        {"name": "Box Jumps", "equipment": "Plyo Box", "sets": 3, "reps": "10-12", "rest": 60},
+        {"name": "Burpees", "equipment": "Bodyweight", "sets": 3, "reps": "10-15", "rest": 60, "image_id": "Burpee"},
+        {"name": "Thrusters", "equipment": "Barbell", "sets": 4, "reps": "8-10", "rest": 90, "image_id": "Barbell_Squat"},
+        {"name": "Kettlebell Swings", "equipment": "Kettlebell", "sets": 4, "reps": "15-20", "rest": 60, "image_id": "One-Arm_Kettlebell_Swings"},
+        {"name": "Clean and Press", "equipment": "Barbell", "sets": 4, "reps": "6-8", "rest": 120, "image_id": "Clean_and_Press"},
+        {"name": "Man Makers", "equipment": "Dumbbells", "sets": 3, "reps": "8-10", "rest": 90, "image_id": "Alternating_Renegade_Row"},
+        {"name": "Mountain Climbers", "equipment": "Bodyweight", "sets": 3, "reps": "30 sec", "rest": 30, "image_id": "Mountain_Climbers"},
+        {"name": "Box Jumps", "equipment": "Plyo Box", "sets": 3, "reps": "10-12", "rest": 60, "image_id": "Bench_Jump"},
     ],
 }
 
@@ -247,6 +256,10 @@ def generate_workout(muscle_group="Full Body", difficulty="Intermediate", max_du
                 "sets": ex["sets"],
                 "reps": ex["reps"],
                 "rest": f"{ex['rest']} sec",
+                "images": [
+                    f"{IMAGE_BASE_URL}/{ex['image_id']}/0.jpg",
+                    f"{IMAGE_BASE_URL}/{ex['image_id']}/1.jpg",
+                ],
             }
             for i, ex in enumerate(adjusted_exercises)
         ],

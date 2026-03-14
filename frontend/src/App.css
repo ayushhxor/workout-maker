@@ -356,8 +356,9 @@
 .exercise-card {
   display: grid;
   grid-template-columns: 40px 1fr auto;
+  grid-template-rows: auto auto;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem 1rem;
   padding: 1rem 1.25rem;
   background: var(--bg-secondary);
   border: 1px solid var(--border-subtle);
@@ -461,6 +462,115 @@
   font-size: 0.75rem;
 }
 
+/* ── Exercise Images ─────────────────── */
+.exercise-image-wrap {
+  grid-column: 1 / -1;
+  width: 100%;
+  max-width: 260px;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+  position: relative;
+  opacity: 0;
+  transition: opacity 0.4s ease, transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+.exercise-image-wrap.loaded {
+  opacity: 1;
+}
+
+.exercise-image-wrap:hover {
+  border-color: var(--border-glow);
+  transform: scale(1.03);
+}
+
+.exercise-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.image-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: rgba(0,0,0,0.65);
+  color: var(--blue-400);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 2px 7px;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  backdrop-filter: blur(4px);
+}
+
+/* ── Image Lightbox Overlay ──────────── */
+.image-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.25s ease;
+  cursor: pointer;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.image-overlay-content {
+  position: relative;
+  max-width: 520px;
+  width: 90%;
+  cursor: default;
+}
+
+.image-overlay-img {
+  width: 100%;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+}
+
+.image-overlay-name {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.image-close-btn {
+  position: absolute;
+  top: -36px;
+  right: 0;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background var(--transition-fast);
+}
+
+.image-close-btn:hover {
+  background: rgba(255,255,255,0.2);
+}
+
 /* ── Empty State ──────────────────────── */
 .empty-state {
   text-align: center;
@@ -511,6 +621,10 @@
   .exercise-details {
     grid-column: 1 / -1;
     justify-content: flex-start;
+  }
+
+  .exercise-image-wrap {
+    max-width: 100%;
   }
 
   .workout-meta {

@@ -1,5 +1,54 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
+
+// Animated exercise image (toggles between start/end position)
+function ExerciseImage({ images, name }) {
+  const [frame, setFrame] = useState(0)
+  const [expanded, setExpanded] = useState(false)
+  const [loaded, setLoaded] = useState(false)
+
+  useEffect(() => {
+    if (!images || images.length < 2) return
+    const interval = setInterval(() => {
+      setFrame((f) => (f === 0 ? 1 : 0))
+    }, 1200)
+    return () => clearInterval(interval)
+  }, [images])
+
+  if (!images || images.length === 0) return null
+
+  return (
+    <>
+      <div
+        className={`exercise-image-wrap ${loaded ? 'loaded' : ''}`}
+        onClick={() => setExpanded(true)}
+        title="Click to enlarge"
+      >
+        <img
+          src={images[frame]}
+          alt={`${name} demonstration`}
+          className="exercise-image"
+          onLoad={() => setLoaded(true)}
+          onError={(e) => { e.target.style.display = 'none' }}
+        />
+        <div className="image-badge">GIF</div>
+      </div>
+      {expanded && (
+        <div className="image-overlay" onClick={() => setExpanded(false)}>
+          <div className="image-overlay-content" onClick={(e) => e.stopPropagation()}>
+            <button className="image-close-btn" onClick={() => setExpanded(false)}>✕</button>
+            <img
+              src={images[frame]}
+              alt={`${name} demonstration`}
+              className="image-overlay-img"
+            />
+            <div className="image-overlay-name">{name}</div>
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
 
 const API_URL = 'http://127.0.0.1:5000/api'
 
@@ -198,6 +247,7 @@ function App() {
                       <div className="exercise-name">{ex.name}</div>
                       <div className="exercise-equipment">{ex.equipment}</div>
                     </div>
+                    <ExerciseImage images={ex.images} name={ex.name} />
                     <div className="exercise-details">
                       <div className="detail-badge">
                         <span className="detail-value">{ex.sets}</span>
