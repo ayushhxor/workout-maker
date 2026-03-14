@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import './App.css'
+import LandingPage from './LandingPage'
 
 // Animated exercise image (toggles between start/end position)
 function ExerciseImage({ images, name }) {
@@ -74,6 +75,7 @@ const DURATIONS = [
 ]
 
 function App() {
+  const [page, setPage] = useState('landing')
   const [muscleGroup, setMuscleGroup] = useState('Full Body')
   const [difficulty, setDifficulty] = useState('Intermediate')
   const [maxDuration, setMaxDuration] = useState('any')
@@ -99,10 +101,25 @@ function App() {
     }
   }
 
+  if (page === 'landing') {
+    return <LandingPage onStartWorkout={() => { setPage('generator'); window.scrollTo(0, 0); }} />
+  }
+
   return (
     <>
       {/* ── Header ─────────────────────────── */}
       <header className="app-header">
+        <div className="header-top-bar">
+          <button className="back-to-landing" onClick={() => setPage('landing')}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Home
+          </button>
+          <div className="header-brand-small">
+            FLOW<span className="brand-text-accent">GEN</span>
+          </div>
+        </div>
         <div className="header-badge">
           <span className="pulse"></span>
           Python Mini Project

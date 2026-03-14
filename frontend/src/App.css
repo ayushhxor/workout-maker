@@ -2,6 +2,50 @@
    App Layout & Components
    ═══════════════════════════════════════════ */
 
+/* ── Header Top Bar (Generator View) ──── */
+.header-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.back-to-landing {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary);
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.back-to-landing:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+}
+
+.header-brand-small {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 1.1rem;
+  font-style: italic;
+  letter-spacing: -0.04em;
+  color: white;
+  user-select: none;
+}
+
+.brand-text-accent {
+  color: var(--blue-400);
+}
+
 /* ── Header ────────────────────────────── */
 .app-header {
   text-align: center;
