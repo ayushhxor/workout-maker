@@ -1,0 +1,128 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* ═══════════════════════════════════════════
+   CSS Custom Properties — Black & Orange Theme
+   ═══════════════════════════════════════════ */
+:root {
+  /* Background colors */
+  --bg-primary: #0a0806;
+  --bg-secondary: #12100b;
+  --bg-card: rgba(22, 18, 12, 0.7);
+  --bg-card-hover: rgba(32, 26, 16, 0.85);
+  --bg-glass: rgba(255, 140, 0, 0.06);
+
+  /* Orange accent palette */
+  --blue-100: #fff3e0;
+  --blue-200: #ffcc80;
+  --blue-300: #ffb347;
+  --blue-400: #ff9500;
+  --blue-500: #ff8000;
+  --blue-600: #e06800;
+  --blue-700: #b85400;
+  --blue-800: #8c4000;
+  --blue-glow: rgba(255, 140, 0, 0.25);
+  --blue-neon: #ffaa00;
+
+  /* Yellow-orange accent (replacing cyan) */
+  --cyan-400: #ffc040;
+  --cyan-glow: rgba(255, 192, 64, 0.15);
+
+  /* Text colors */
+  --text-primary: #f0ebe4;
+  --text-secondary: #a89882;
+  --text-muted: #756555;
+  --text-accent: var(--blue-400);
+
+  /* Borders */
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-glow: rgba(255, 140, 0, 0.2);
+
+  /* Shadows */
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 30px rgba(255, 140, 0, 0.1);
+  --shadow-button: 0 4px 20px rgba(255, 120, 0, 0.3);
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.6;
+  font-weight: 400;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  color-scheme: dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ═══════════════ Global Reset ═══════════════ */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: var(--bg-primary);
+}
+
+/* Animated background gradient */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255, 120, 0, 0.12), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 50%, rgba(255, 160, 0, 0.06), transparent),
+    radial-gradient(ellipse 50% 60% at 20% 80%, rgba(200, 100, 0, 0.08), transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+/* ═══════════════ Scrollbar ═══════════════ */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--blue-700);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--blue-600);
+}
+
+/* ═══════════════ Selection ═══════════════ */
+::selection {
+  background: var(--blue-600);
+  color: white;
+}
