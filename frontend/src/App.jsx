@@ -15,9 +15,19 @@ const MUSCLE_GROUPS = [
 
 const DIFFICULTIES = ['Beginner', 'Intermediate', 'Advanced']
 
+const DURATIONS = [
+  { value: 'any',  label: '⏳ No Limit' },
+  { value: '15',   label: '⚡ 15 min' },
+  { value: '30',   label: '🕐 30 min' },
+  { value: '45',   label: '🕑 45 min' },
+  { value: '60',   label: '🕒 60 min' },
+  { value: '90',   label: '🕓 90 min' },
+]
+
 function App() {
   const [muscleGroup, setMuscleGroup] = useState('Full Body')
   const [difficulty, setDifficulty] = useState('Intermediate')
+  const [maxDuration, setMaxDuration] = useState('any')
   const [workout, setWorkout] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -27,7 +37,7 @@ function App() {
     setError(null)
     try {
       const res = await fetch(
-        `${API_URL}/workout?muscle_group=${encodeURIComponent(muscleGroup)}&difficulty=${encodeURIComponent(difficulty)}`
+        `${API_URL}/workout?muscle_group=${encodeURIComponent(muscleGroup)}&difficulty=${encodeURIComponent(difficulty)}&max_duration=${encodeURIComponent(maxDuration)}`
       )
       if (!res.ok) throw new Error('Failed to fetch workout')
       const data = await res.json()
@@ -89,6 +99,21 @@ function App() {
                 ))}
               </select>
             </div>
+
+            <div className="control-group">
+              <label htmlFor="duration">Workout Duration</label>
+              <select
+                id="duration"
+                value={maxDuration}
+                onChange={(e) => setMaxDuration(e.target.value)}
+              >
+                {DURATIONS.map((d) => (
+                  <option key={d.value} value={d.value}>
+                    {d.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           <button
@@ -135,6 +160,11 @@ function App() {
                 <span className="meta-chip">
                   ⏱️ Est. Duration: <span className="meta-value">{workout.estimated_duration}</span>
                 </span>
+                {workout.max_duration && (
+                  <span className="meta-chip duration-chip">
+                    🎯 Time Limit: <span className="meta-value">{workout.max_duration}</span>
+                  </span>
+                )}
               </div>
             </div>
 

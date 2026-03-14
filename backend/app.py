@@ -117,13 +117,33 @@ QUOTES = [
 ]
 
 
+# Available duration presets (in minutes)
+# "any" means no time constraint
+DURATION_OPTIONS = [
+    {"value": "any",  "label": "⏳ No Limit",  "minutes": None},
+    {"value": "15",   "label": "⚡ 15 min",    "minutes": 15},
+    {"value": "30",   "label": "🕐 30 min",    "minutes": 30},
+    {"value": "45",   "label": "🕑 45 min",    "minutes": 45},
+    {"value": "60",   "label": "🕒 60 min",    "minutes": 60},
+    {"value": "90",   "label": "🕓 90 min",    "minutes": 90},
+]
+
+
+def calculate_exercise_duration(exercise):
+    """
+    Calculate the duration of a single exercise in seconds.
+    Formula: (sets * ~45 seconds per set) + (sets * rest between sets)
+    """
+    return (exercise["sets"] * 45) + (exercise["sets"] * exercise["rest"])
+
+
 def calculate_estimated_duration(exercises):
     """
     Calculate the estimated workout duration in minutes.
     Uses: sum(), list comprehension, dictionary access.
     """
     total_seconds = sum(
-        (ex["sets"] * 45) + (ex["sets"] * ex["rest"])
+        calculate_exercise_duration(ex)
         for ex in exercises
     )
     return round(total_seconds / 60)
@@ -138,7 +158,7 @@ def adjust_sets(exercise, modifier):
     return {**exercise, "sets": max(1, exercise["sets"] + modifier)}
 
 
-def generate_workout(muscle_group="Full Body", difficulty="Intermediate"):
+def generate_workout(muscle_group="Full Body", difficulty="Intermediate", max_duration=None):
     """
     Generate a random workout plan.
     
@@ -149,6 +169,13 @@ def generate_workout(muscle_group="Full Body", difficulty="Intermediate"):
     - String formatting for output
     - Conditional logic for difficulty scaling
     - Function composition
+    - Greedy algorithm for time-constrained selection
+
+    Parameters:
+      muscle_group (str): Target muscle group
+      difficulty   (str): Beginner / Intermediate / Advanced
+      max_duration (int | None): Maximum workout time in minutes.
+                                 When None, the normal count-based logic is used.
     """
     # Validate inputs with fallback defaults
     if muscle_group not in EXERCISES:
@@ -159,14 +186,38 @@ def generate_workout(muscle_group="Full Body", difficulty="Intermediate"):
     config = DIFFICULTY_CONFIG[difficulty]
     available_exercises = EXERCISES[muscle_group]
 
-    # Select random exercises (don't exceed available count)
-    count = min(config["exercise_count"], len(available_exercises))
-    selected = random.sample(available_exercises, count)
+    if max_duration is not None:
+        # ── Time-constrained mode ──────────────────────────
+        # Shuffle to randomize, then greedily pick exercises
+        # that fit within the remaining time budget.
+        # Warm-up & cool-down overhead: ~12 min
+        overhead_minutes = 12
+        budget_seconds = max(0, (max_duration - overhead_minutes)) * 60
 
-    # Adjust sets based on difficulty using list comprehension
-    adjusted_exercises = [
-        adjust_sets(ex, config["set_modifier"]) for ex in selected
-    ]
+        candidates = [
+            adjust_sets(ex, config["set_modifier"])
+            for ex in available_exercises
+        ]
+        random.shuffle(candidates)
+
+        adjusted_exercises = []
+        used_seconds = 0
+        for ex in candidates:
+            ex_time = calculate_exercise_duration(ex)
+            if used_seconds + ex_time <= budget_seconds:
+                adjusted_exercises.append(ex)
+                used_seconds += ex_time
+
+        # Guarantee at least 1 exercise even for very short durations
+        if not adjusted_exercises and candidates:
+            adjusted_exercises.append(candidates[0])
+    else:
+        # ── Normal count-based mode ────────────────────────
+        count = min(config["exercise_count"], len(available_exercises))
+        selected = random.sample(available_exercises, count)
+        adjusted_exercises = [
+            adjust_sets(ex, config["set_modifier"]) for ex in selected
+        ]
 
     # Shuffle the order for variety
     random.shuffle(adjusted_exercises)
@@ -186,6 +237,7 @@ def generate_workout(muscle_group="Full Body", difficulty="Intermediate"):
         "difficulty": config["label"],
         "exercise_count": len(adjusted_exercises),
         "estimated_duration": f"{duration} minutes",
+        "max_duration": f"{max_duration} minutes" if max_duration else None,
         "warmup": warmup,
         "exercises": [
             {
@@ -220,11 +272,21 @@ def get_workout():
     Query Parameters:
         - muscle_group (str): Target muscle group
         - difficulty (str): Beginner, Intermediate, or Advanced
+        - max_duration (str): Maximum workout time in minutes, or 'any'
     """
     muscle_group = request.args.get("muscle_group", "Full Body")
     difficulty = request.args.get("difficulty", "Intermediate")
+    max_duration_raw = request.args.get("max_duration", "any")
 
-    workout = generate_workout(muscle_group, difficulty)
+    # Parse max_duration — 'any' or missing means no time constraint
+    max_duration = None
+    if max_duration_raw and max_duration_raw != "any":
+        try:
+            max_duration = int(max_duration_raw)
+        except ValueError:
+            pass
+
+    workout = generate_workout(muscle_group, difficulty, max_duration)
     return jsonify(workout)
 
 
@@ -260,16 +322,23 @@ def get_difficulties():
     return jsonify(difficulties)
 
 
+@app.route("/api/durations", methods=["GET"])
+def get_durations():
+    """Return all available duration presets."""
+    return jsonify(DURATION_OPTIONS)
+
+
 @app.route("/", methods=["GET"])
 def index():
     """API health check / info endpoint."""
     return jsonify({
         "app": "Random Workout Generator API",
-        "version": "1.0.0",
+        "version": "1.1.0",
         "endpoints": [
-            "GET /api/workout?muscle_group=...&difficulty=...",
+            "GET /api/workout?muscle_group=...&difficulty=...&max_duration=...",
             "GET /api/muscle-groups",
             "GET /api/difficulties",
+            "GET /api/durations",
         ],
     })
 

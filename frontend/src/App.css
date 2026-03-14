@@ -84,7 +84,7 @@
 
 .controls-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 1.5rem;
   margin-bottom: 1.5rem;
 }
@@ -92,6 +92,12 @@
 @media (max-width: 600px) {
   .controls-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 800px) {
+  .controls-grid {
+    grid-template-columns: 1fr 1fr;
   }
 }
 
@@ -262,6 +268,11 @@
 .meta-chip .meta-value {
   color: var(--text-accent);
   font-weight: 600;
+}
+
+.meta-chip.duration-chip {
+  border-color: var(--border-glow);
+  background: linear-gradient(135deg, rgba(255, 120, 0, 0.1), rgba(255, 180, 0, 0.06));
 }
 
 .workout-title {
