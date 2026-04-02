@@ -12,12 +12,7 @@ function LandingPage({ onStartWorkout }) {
           <nav className="landing-nav">
             <a href="#trending">Programs</a>
             <a href="#trending" onClick={(e) => { e.preventDefault(); onStartWorkout(); }}>Workouts</a>
-            <a href="#footer">Community</a>
-            <a href="#footer">About</a>
           </nav>
-          <button className="header-login-btn" onClick={onStartWorkout}>
-            Login
-          </button>
         </div>
       </header>
 
@@ -31,8 +26,7 @@ function LandingPage({ onStartWorkout }) {
             <span className="hero-accent">Way</span>
           </h1>
           <p className="hero-desc">
-            AI-powered flows tailored to your vibe, your space, and your energy level.
-            Join the next generation of athletes.
+            Fitness that understands you.
           </p>
           <button className="hero-cta" onClick={onStartWorkout}>
             Start Your Flow
@@ -61,7 +55,7 @@ function LandingPage({ onStartWorkout }) {
           </div>
           <div className="trending-grid">
             {/* Card 1 */}
-            <article className="trending-card" onClick={onStartWorkout}>
+            <article className="trending-card" onClick={() => onStartWorkout('phonk_pump')}>
               <div className="card-image-wrap">
                 <img
                   src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&auto=format&fit=crop&q=80"
@@ -73,20 +67,15 @@ function LandingPage({ onStartWorkout }) {
               <div className="card-body">
                 <h3 className="card-title">Phonk Pump HIIT</h3>
                 <div className="card-meta">
-                  <span>15 Mins</span>
-                  <span className="meta-dot"></span>
-                  <span>Advanced</span>
-                  <span className="meta-dot"></span>
-                  <span>No Equipment</span>
+                  <span>Push-Ups • Burpees • Mountain Climbers</span>
                 </div>
                 <div className="card-footer">
-                  <span className="card-saves">#24k SAVED</span>
                   <button className="card-join-btn">Join +</button>
                 </div>
               </div>
             </article>
             {/* Card 2 */}
-            <article className="trending-card" onClick={onStartWorkout}>
+            <article className="trending-card" onClick={() => onStartWorkout('matrix_mobility')}>
               <div className="card-image-wrap">
                 <img
                   src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600&auto=format&fit=crop&q=80"
@@ -97,20 +86,15 @@ function LandingPage({ onStartWorkout }) {
               <div className="card-body">
                 <h3 className="card-title">Matrix Mobility</h3>
                 <div className="card-meta">
-                  <span>30 Mins</span>
-                  <span className="meta-dot"></span>
-                  <span>Beginner</span>
-                  <span className="meta-dot"></span>
-                  <span>Mat Only</span>
+                  <span>Plank • Dead Bug • Bicycle Crunches</span>
                 </div>
                 <div className="card-footer">
-                  <span className="card-saves">#18k SAVED</span>
                   <button className="card-join-btn">Join +</button>
                 </div>
               </div>
             </article>
             {/* Card 3 */}
-            <article className="trending-card" onClick={onStartWorkout}>
+            <article className="trending-card" onClick={() => onStartWorkout('vapor_core')}>
               <div className="card-image-wrap">
                 <img
                   src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600&auto=format&fit=crop&q=80"
@@ -121,14 +105,9 @@ function LandingPage({ onStartWorkout }) {
               <div className="card-body">
                 <h3 className="card-title">Vapor Core 300</h3>
                 <div className="card-meta">
-                  <span>20 Mins</span>
-                  <span className="meta-dot"></span>
-                  <span>Intermediate</span>
-                  <span className="meta-dot"></span>
-                  <span>Bodyweight</span>
+                  <span>Bicycle Crunches • Hanging Leg Raises • Russian Twists</span>
                 </div>
                 <div className="card-footer">
-                  <span className="card-saves">#12k SAVED</span>
                   <button className="card-join-btn">Join +</button>
                 </div>
               </div>
@@ -169,11 +148,6 @@ function LandingPage({ onStartWorkout }) {
             FLOW<span className="brand-accent">GEN</span>
           </div>
           <p className="footer-tagline">Generated for the next generation of athletes.</p>
-          <div className="footer-links">
-            <a href="#">Instagram</a>
-            <a href="#">TikTok</a>
-            <a href="#">Discord</a>
-          </div>
           <div className="footer-copy">
             © 2026 FlowGen Studio. All rights reserved.
           </div>

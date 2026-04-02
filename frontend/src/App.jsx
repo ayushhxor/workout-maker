@@ -51,28 +51,150 @@ function ExerciseImage({ images, name }) {
   )
 }
 
-const API_URL = 'http://127.0.0.1:5000/api'
+const API_URL = 'http://127.0.0.1:10000/api'
 
 const MUSCLE_GROUPS = [
-  { name: 'Full Body', icon: '🔥' },
-  { name: 'Chest', icon: '🏋️' },
-  { name: 'Back', icon: '🔙' },
-  { name: 'Legs', icon: '🦵' },
-  { name: 'Shoulders', icon: '💪' },
-  { name: 'Arms', icon: '💪' },
-  { name: 'Core', icon: '🎯' },
+  { name: 'Full Body' },
+  { name: 'Chest' },
+  { name: 'Back' },
+  { name: 'Legs' },
+  { name: 'Shoulders' },
+  { name: 'Arms' },
+  { name: 'Core' },
 ]
 
 const DIFFICULTIES = ['Beginner', 'Intermediate', 'Advanced']
 
 const DURATIONS = [
-  { value: 'any',  label: '⏳ No Limit' },
-  { value: '15',   label: '⚡ 15 min' },
-  { value: '30',   label: '🕐 30 min' },
-  { value: '45',   label: '🕑 45 min' },
-  { value: '60',   label: '🕒 60 min' },
-  { value: '90',   label: '🕓 90 min' },
+  { value: 'any',  label: 'No Limit' },
+  { value: '15',   label: '15 min' },
+  { value: '30',   label: '30 min' },
+  { value: '45',   label: '45 min' },
+  { value: '60',   label: '60 min' },
+  { value: '90',   label: '90 min' },
 ]
+
+const IMAGE_BASE_URL = "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises";
+
+const PREDEFINED_WORKOUTS = {
+  phonk_pump: {
+    muscle_group: "Full Body",
+    difficulty: "Advanced",
+    exercise_count: 3,
+    estimated_duration: "15 minutes",
+    max_duration: null,
+    warmup: ["Jumping jacks", "Arm circles", "High knees"],
+    cooldown: ["Deep breathing", "Static stretching"],
+    quote: "Train insane or remain the same.",
+    exercises: [
+      {
+        order: 1,
+        name: "Push-Ups",
+        equipment: "Bodyweight",
+        sets: 4,
+        reps: "20",
+        rest: "30 sec",
+        images: [`${IMAGE_BASE_URL}/Push-Ups/0.jpg`, `${IMAGE_BASE_URL}/Push-Ups/1.jpg`]
+      },
+      {
+        order: 2,
+        name: "Burpees",
+        equipment: "Bodyweight",
+        sets: 4,
+        reps: "15",
+        rest: "45 sec",
+        images: [`${IMAGE_BASE_URL}/Burpee/0.jpg`, `${IMAGE_BASE_URL}/Burpee/1.jpg`]
+      },
+      {
+        order: 3,
+        name: "Mountain Climbers",
+        equipment: "Bodyweight",
+        sets: 4,
+        reps: "45 sec",
+        rest: "30 sec",
+        images: [`${IMAGE_BASE_URL}/Mountain_Climbers/0.jpg`, `${IMAGE_BASE_URL}/Mountain_Climbers/1.jpg`]
+      }
+    ]
+  },
+  matrix_mobility: {
+    muscle_group: "Core & Mobility",
+    difficulty: "Beginner",
+    exercise_count: 3,
+    estimated_duration: "20 minutes",
+    max_duration: null,
+    warmup: ["Cat-cow stretch", "Hip circles", "Arm circles"],
+    cooldown: ["Child's pose", "Deep breathing"],
+    quote: "A flexible body leads to a flexible mind.",
+    exercises: [
+      {
+        order: 1,
+        name: "Plank",
+        equipment: "Bodyweight",
+        sets: 3,
+        reps: "60 sec",
+        rest: "30 sec",
+        images: [`${IMAGE_BASE_URL}/Plank/0.jpg`, `${IMAGE_BASE_URL}/Plank/1.jpg`]
+      },
+      {
+        order: 2,
+        name: "Dead Bug",
+        equipment: "Bodyweight",
+        sets: 3,
+        reps: "12 each",
+        rest: "30 sec",
+        images: [`${IMAGE_BASE_URL}/Flat_Bench_Lying_Leg_Raise/0.jpg`, `${IMAGE_BASE_URL}/Flat_Bench_Lying_Leg_Raise/1.jpg`]
+      },
+      {
+        order: 3,
+        name: "Bicycle Crunches",
+        equipment: "Bodyweight",
+        sets: 3,
+        reps: "20 total",
+        rest: "30 sec",
+        images: [`${IMAGE_BASE_URL}/Air_Bike/0.jpg`, `${IMAGE_BASE_URL}/Air_Bike/1.jpg`]
+      }
+    ]
+  },
+  vapor_core: {
+    muscle_group: "Core",
+    difficulty: "Intermediate",
+    exercise_count: 3,
+    estimated_duration: "20 minutes",
+    max_duration: null,
+    warmup: ["Torso twists", "Dead bugs", "High knees"],
+    cooldown: ["Cobra stretch", "Child's pose"],
+    quote: "Core is the foundation of everything you do.",
+    exercises: [
+      {
+        order: 1,
+        name: "Bicycle Crunches",
+        equipment: "Bodyweight",
+        sets: 4,
+        reps: "20 total",
+        rest: "30 sec",
+        images: [`${IMAGE_BASE_URL}/Air_Bike/0.jpg`, `${IMAGE_BASE_URL}/Air_Bike/1.jpg`]
+      },
+      {
+        order: 2,
+        name: "Hanging Leg Raises",
+        equipment: "Pull-Up Bar",
+        sets: 4,
+        reps: "15",
+        rest: "45 sec",
+        images: [`${IMAGE_BASE_URL}/Hanging_Leg_Raise/0.jpg`, `${IMAGE_BASE_URL}/Hanging_Leg_Raise/1.jpg`]
+      },
+      {
+        order: 3,
+        name: "Russian Twists",
+        equipment: "Bodyweight",
+        sets: 4,
+        reps: "20 total",
+        rest: "30 sec",
+        images: [`${IMAGE_BASE_URL}/Russian_Twist/0.jpg`, `${IMAGE_BASE_URL}/Russian_Twist/1.jpg`]
+      }
+    ]
+  }
+};
 
 function App() {
   const [page, setPage] = useState('landing')
@@ -94,15 +216,27 @@ function App() {
       const data = await res.json()
       setWorkout(data)
     } catch (err) {
-      setError('Could not connect to the server. Make sure the Python backend is running on port 5000.')
+      setError('Could not connect to the server. Make sure the Python backend is running on port 10000.')
       console.error(err)
     } finally {
       setLoading(false)
     }
   }
 
+  const startAndLoadWorkout = (predefinedKey) => {
+    if (predefinedKey && PREDEFINED_WORKOUTS[predefinedKey]) {
+      setMuscleGroup(PREDEFINED_WORKOUTS[predefinedKey].muscle_group)
+      setDifficulty(PREDEFINED_WORKOUTS[predefinedKey].difficulty)
+      setWorkout(PREDEFINED_WORKOUTS[predefinedKey])
+    } else {
+      setWorkout(null)
+    }
+    setPage('generator')
+    window.scrollTo(0, 0)
+  }
+
   if (page === 'landing') {
-    return <LandingPage onStartWorkout={() => { setPage('generator'); window.scrollTo(0, 0); }} />
+    return <LandingPage onStartWorkout={startAndLoadWorkout} />
   }
 
   return (
@@ -120,14 +254,7 @@ function App() {
             FLOW<span className="brand-text-accent">GEN</span>
           </div>
         </div>
-        <div className="header-badge">
-          <span className="pulse"></span>
-          Python Mini Project
-        </div>
-        <h1>Random Workout Generator</h1>
-        <p className="subtitle">
-          Generate personalized workout plans powered by Python. Select your target muscle group and difficulty to get started.
-        </p>
+        <h1>AI-powered workouts tailored to your energy.</h1>
       </header>
 
       {/* ── Main Content ───────────────────── */}
@@ -145,7 +272,7 @@ function App() {
               >
                 {MUSCLE_GROUPS.map((g) => (
                   <option key={g.name} value={g.name}>
-                    {g.icon} {g.name}
+                    {g.name}
                   </option>
                 ))}
               </select>
@@ -160,7 +287,7 @@ function App() {
               >
                 {DIFFICULTIES.map((d) => (
                   <option key={d} value={d}>
-                    {d === 'Beginner' ? '🟢' : d === 'Intermediate' ? '🟡' : '🔴'} {d}
+                    {d}
                   </option>
                 ))}
               </select>
@@ -194,7 +321,7 @@ function App() {
                   Generating...
                 </>
               ) : (
-                <>⚡ Generate Workout</>
+                <>Generate Workout</>
               )}
             </span>
           </button>
@@ -203,7 +330,7 @@ function App() {
         {/* Error Message */}
         {error && (
           <div className="quote-card" style={{ borderColor: '#ff4444', color: '#ff8888' }}>
-            ⚠️ {error}
+            {error}
           </div>
         )}
 
@@ -218,17 +345,17 @@ function App() {
               </h2>
               <div className="workout-meta">
                 <span className="meta-chip">
-                  🎯 Difficulty: <span className="meta-value">{workout.difficulty}</span>
+                  Difficulty: <span className="meta-value">{workout.difficulty.replace(/[^a-zA-Z\s]/g, '')}</span>
                 </span>
                 <span className="meta-chip">
-                  🏋️ Exercises: <span className="meta-value">{workout.exercise_count}</span>
+                  Exercises: <span className="meta-value">{workout.exercise_count}</span>
                 </span>
                 <span className="meta-chip">
-                  ⏱️ Est. Duration: <span className="meta-value">{workout.estimated_duration}</span>
+                  Est. Duration: <span className="meta-value">{workout.estimated_duration}</span>
                 </span>
                 {workout.max_duration && (
                   <span className="meta-chip duration-chip">
-                    🎯 Time Limit: <span className="meta-value">{workout.max_duration}</span>
+                    Time Limit: <span className="meta-value">{workout.max_duration}</span>
                   </span>
                 )}
               </div>
@@ -242,7 +369,7 @@ function App() {
             {/* Warm-Up */}
             <div className="section-card">
               <h3 className="section-title">
-                <span className="section-icon">🔥</span> Warm-Up
+                Warm-Up
               </h3>
               <ul className="warmup-list">
                 {workout.warmup.map((item, i) => (
@@ -254,7 +381,7 @@ function App() {
             {/* Exercises */}
             <div className="section-card">
               <h3 className="section-title">
-                <span className="section-icon">💪</span> Exercises
+                Exercises
               </h3>
               <div className="exercise-list">
                 {workout.exercises.map((ex) => (
@@ -287,7 +414,7 @@ function App() {
             {/* Cool-Down */}
             <div className="section-card">
               <h3 className="section-title">
-                <span className="section-icon">🧊</span> Cool-Down
+                Cool-Down
               </h3>
               <ul className="cooldown-list">
                 {workout.cooldown.map((item, i) => (
@@ -301,17 +428,12 @@ function App() {
         {/* Empty State */}
         {!workout && !error && (
           <div className="empty-state">
-            <div className="empty-icon">🏋️</div>
             <h3>Ready to Work Out?</h3>
             <p>Select your preferences above and hit the generate button to create a randomized workout plan.</p>
           </div>
         )}
       </main>
 
-      {/* ── Footer ─────────────────────────── */}
-      <footer className="app-footer">
-        Built with <span>Python</span> & <span>React</span> — Random Workout Generator © 2026
-      </footer>
     </>
   )
 }

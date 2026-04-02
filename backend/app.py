@@ -6,6 +6,7 @@ list comprehensions, functions, and control flow.
 """
 
 import random
+import os
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
@@ -95,9 +96,9 @@ EXERCISES = {
 
 # Difficulty multipliers affect volume (number of exercises)
 DIFFICULTY_CONFIG = {
-    "Beginner": {"exercise_count": 3, "set_modifier": -1, "label": "🟢 Beginner"},
-    "Intermediate": {"exercise_count": 5, "set_modifier": 0, "label": "🟡 Intermediate"},
-    "Advanced": {"exercise_count": 7, "set_modifier": 1, "label": "🔴 Advanced"},
+    "Beginner": {"exercise_count": 3, "set_modifier": -1, "label": "Beginner"},
+    "Intermediate": {"exercise_count": 5, "set_modifier": 0, "label": "Intermediate"},
+    "Advanced": {"exercise_count": 7, "set_modifier": 1, "label": "Advanced"},
 }
 
 # Warm-up suggestions by muscle group
@@ -113,16 +114,16 @@ WARMUPS = {
 
 # Motivational quotes to include in the workout
 QUOTES = [
-    "The only bad workout is the one that didn't happen. 💪",
-    "Push yourself, because no one else is going to do it for you. 🔥",
-    "Your body can stand almost anything. It's your mind you have to convince. 🧠",
-    "The pain you feel today will be the strength you feel tomorrow. ⚡",
-    "Don't wish for it. Work for it. 🏋️",
-    "Sweat is just fat crying. 😤",
-    "Be stronger than your excuses. 💯",
-    "The hard days are what make you stronger. 🦾",
-    "Success starts with self-discipline. 🎯",
-    "Train insane or remain the same. 🏆",
+    "The only bad workout is the one that didn't happen.",
+    "Push yourself, because no one else is going to do it for you.",
+    "Your body can stand almost anything. It's your mind you have to convince.",
+    "The pain you feel today will be the strength you feel tomorrow.",
+    "Don't wish for it. Work for it.",
+    "Sweat is just fat crying.",
+    "Be stronger than your excuses.",
+    "The hard days are what make you stronger.",
+    "Success starts with self-discipline.",
+    "Train insane or remain the same.",
 ]
 
 
@@ -310,15 +311,7 @@ def get_muscle_groups():
         {
             "name": group,
             "exercise_count": len(exercises),
-            "icon": {
-                "Chest": "🏋️",
-                "Back": "🔙",
-                "Legs": "🦵",
-                "Shoulders": "💪",
-                "Arms": "💪",
-                "Core": "🎯",
-                "Full Body": "🔥",
-            }.get(group, "💪"),
+            "icon": "",
         }
         for group, exercises in EXERCISES.items()
     ]
@@ -358,6 +351,6 @@ def index():
 
 if __name__ == "__main__":
     print("\n🏋️  Random Workout Generator API")
-    print("   Running on http://127.0.0.1:5000")
     print("   Press Ctrl+C to stop\n")
-    app.run(debug=True, port=5000)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
