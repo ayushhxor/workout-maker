@@ -3,8 +3,7 @@
 An aesthetic, intelligent workout generator that creates customized exercise flows tailored to your energy. Based on your target muscle, difficulty level, and available time, the generator builds complete circuits, complete with warm-ups and cool-downs.
 
 ## 🚀 Live Demo
-**[🎯 Click Here to See the Live App!]("Replace_this_text_with_your_vercel_url")** 
-*(Don't forget to edit this file later and add your actual Vercel link here!)*
+https://flowgen-1.vercel.app/
 
 ## 🛠️ Tech Stack
 - **Frontend**: React (Vite) + Custom Vanilla CSS
